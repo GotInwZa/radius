@@ -20,7 +20,7 @@ FLUSH PRIVILEGES;
 EOF
 
 echo "=== Import Schema FreeRADIUS ==="
-mysql -u radius_user -p radius_pass123 radius_db < /etc/freeradius/3.0/mods-config/sql/main/mysql/schema.sql
+mysql -uradius_user -pradius_pass123 radius_db < /etc/freeradius/3.0/mods-config/sql/main/mysql/schema.sql
 
 ln -sf /etc/freeradius/3.0/mods-available/sql /etc/freeradius/3.0/mods-enabled/sql
 
