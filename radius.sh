@@ -47,18 +47,18 @@ client all {
 }
 EOF
 
-echo "=== Enable SQL Module ใน sites-enabled/default ==="
-for section in authorize accounting session post-auth; do
+#echo "=== Enable SQL Module ใน sites-enabled/default ==="
+#for section in authorize accounting session post-auth; do
     # ถ้าเป็น '# sql' เอา # ออก
-    sed -i "/^$section {/,/^}/{s/^#[[:space:]]*sql/sql/}" /etc/freeradius/3.0/sites-enabled/default
+#    sed -i "/^$section {/,/^}/{s/^#[[:space:]]*sql/sql/}" /etc/freeradius/3.0/sites-enabled/default
     # ถ้าเป็น '-sql' เอา - ออก
-    sed -i "/^$section {/,/^}/{s/^-sql/sql/}" /etc/freeradius/3.0/sites-enabled/default
-done
+#    sed -i "/^$section {/,/^}/{s/^-sql/sql/}" /etc/freeradius/3.0/sites-enabled/default
+#done
 
 echo "=== สร้าง User got และกำหนดสิทธิ Bandwidth ==="
 mysql -u radius_user -pradius_pass123 radius_db <<EOF
-INSERT INTO radcheck (username, attribute, op, value) VALUES ('got', 'Cleartext-Password', ':=', '12345');
-INSERT INTO radusergroup (username, groupname, priority) VALUES ('got', 'admin', 1);
+INSERT INTO radcheck (username, attribute, op, value) VALUES ('bncc', 'Cleartext-Password', ':=', '12345');
+INSERT INTO radusergroup (username, groupname, priority) VALUES ('bncc', 'admin', 1);
 INSERT INTO radgroupcheck (groupname, attribute, op, value) VALUES ('admin', 'Simultaneous-Use', ':=', '3');
 INSERT INTO radgroupreply (groupname, attribute, op, value) VALUES ('admin', 'Mikrotik-Rate-Limit', ':=', '100M/100M');
 INSERT INTO radgroupreply (groupname, attribute, op, value) VALUES ('admin', 'WISPr-Bandwidth-Max-Down', ':=', '100000000');
