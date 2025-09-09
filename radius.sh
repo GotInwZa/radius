@@ -26,15 +26,9 @@ ln -sf /etc/freeradius/3.0/mods-available/sql /etc/freeradius/3.0/mods-enabled/s
 
 echo "=== แก้ไขไฟล์ mods-available/sql ==="
 # ใช้ sed แก้ค่า server, port, login, password, radius_db และเอา comment ออก
-sed -i 's|^\s*server\s*=.*|server = "localhost"|' /etc/freeradius/3.0/mods-available/sql
-sed -i 's|^\s*port\s*=.*|port = 3306|' /etc/freeradius/3.0/mods-available/sql
-sed -i 's|^\s*login\s*=.*|login = "radius_user"|' /etc/freeradius/3.0/mods-available/sql
-sed -i 's|^\s*password\s*=.*|password = "radius_pass123"|' /etc/freeradius/3.0/mods-available/sql
-sed -i 's|^\s*radius_db\s*=.*|radius_db = "radius_db"|' /etc/freeradius/3.0/mods-available/sql
+cp sql /etc/freeradius/3.0/mods-available/sql
+chown freerad:freerad /etc/freeradius/3.0/mods-available/sql
 
-echo "=== Comment บล็อก TLS/SSL ของ MySQL ใน mods-available/sql ==="
-# comment บล็อก tls { … } ระหว่างบรรทัด 86-96
-sed -i '86,96 s/^/#/' /etc/freeradius/3.0/mods-available/sql
 
 echo "=== เพิ่ม client ใน clients.conf โดยไม่เขียนทับเดิม ==="
 # ตรวจสอบก่อนว่ามี client all อยู่หรือยัง
@@ -48,12 +42,9 @@ client all {
 EOF
 
 #echo "=== Enable SQL Module ใน sites-enabled/default ==="
-#for section in authorize accounting session post-auth; do
-    # ถ้าเป็น '# sql' เอา # ออก
-#    sed -i "/^$section {/,/^}/{s/^#[[:space:]]*sql/sql/}" /etc/freeradius/3.0/sites-enabled/default
-    # ถ้าเป็น '-sql' เอา - ออก
-#    sed -i "/^$section {/,/^}/{s/^-sql/sql/}" /etc/freeradius/3.0/sites-enabled/default
-#done
+cp default /etc/freeradius/3.0/sites-enabled/default
+chmod 640 /etc/freeradius/3.0/sites-enabled/default
+chown freerad:freerad /etc/freeradius/3.0/sites-enabled/default
 
 echo "=== สร้าง User got และกำหนดสิทธิ Bandwidth ==="
 mysql -u radius_user -pradius_pass123 radius_db <<EOF
