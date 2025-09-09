@@ -1,16 +1,12 @@
 #!/bin/bash
 set -e
 
-echo "=== แปลงไฟล์ Windows CRLF เป็น LF ==="
-chmod +x /root/radius.sh
-apt install dos2unix -y
-dos2unix radius.sh
 
 echo "=== Update & Upgrade ระบบ ==="
 apt update -y && apt upgrade -y
 
 echo "=== ติดตั้ง Service ที่ต้องใช้ ==="
-apt install -y net-tools vim apache2 php phpmyadmin mariadb-server mariadb-client freeradius-mysql freeradius
+apt install -y net-tools vim apache2 php mariadb-server mariadb-client freeradius-mysql freeradius
 
 echo "=== เริ่มต้น MariaDB ==="
 systemctl enable --now mariadb
@@ -24,7 +20,7 @@ FLUSH PRIVILEGES;
 EOF
 
 echo "=== Import Schema FreeRADIUS ==="
-mysql -u radius_user -pradius_pass123 radius_db < /etc/freeradius/3.0/mods-config/sql/main/mysql/schema.sql
+mysql -u radius_user -p radius_pass123 radius_db < /etc/freeradius/3.0/mods-config/sql/main/mysql/schema.sql
 
 ln -sf /etc/freeradius/3.0/mods-available/sql /etc/freeradius/3.0/mods-enabled/sql
 
@@ -63,12 +59,12 @@ echo "=== สร้าง User got และกำหนดสิทธิ Bandw
 mysql -u radius_user -pradius_pass123 radius_db <<EOF
 INSERT INTO radcheck (username, attribute, op, value) VALUES ('got', 'Cleartext-Password', ':=', '12345');
 INSERT INTO radusergroup (username, groupname, priority) VALUES ('got', 'admin', 1);
-INSERT INTO radreply (username, attribute, op, value) VALUES ('got', 'Mikrotik-Rate-Limit', ':=', '1M/1M');
-INSERT INTO radreply (username, attribute, op, value) VALUES ('got', 'WISPr-Bandwidth-Max-Down', ':=', '1000000');
-INSERT INTO radreply (username, attribute, op, value) VALUES ('got', 'WISPr-Bandwidth-Max-Up', ':=', '1000000');
 INSERT INTO radgroupcheck (groupname, attribute, op, value) VALUES ('admin', 'Simultaneous-Use', ':=', '3');
-INSERT INTO radgroupcheck (groupname, attribute, op, value) VALUES ('admin', 'Idle-Timeout', ':=', '900');
-INSERT INTO radgroupcheck (groupname, attribute, op, value) VALUES ('admin', 'Session-Timeout', ':=', '14400');
+INSERT INTO radgroupreply (groupname, attribute, op, value) VALUES ('admin', 'Mikrotik-Rate-Limit', ':=', '100M/100M');
+INSERT INTO radgroupreply (groupname, attribute, op, value) VALUES ('admin', 'WISPr-Bandwidth-Max-Down', ':=', '100000000');
+INSERT INTO radgroupreply (groupname, attribute, op, value) VALUES ('admin', 'WISPr-Bandwidth-Max-Up', ':=', '100000000');
+INSERT INTO radgroupreply (groupname, attribute, op, value) VALUES ('admin', 'Idle-Timeout', ':=', '900');
+INSERT INTO radgroupreply (groupname, attribute, op, value) VALUES ('admin', 'Session-Timeout', ':=', '14400');
 EOF
 
 
@@ -84,6 +80,9 @@ echo "=== Restart Services ==="
 systemctl enable --now freeradius
 systemctl restart freeradius
 systemctl enable --now apache2
+
+apt install phpmyadmin php-mysql -y
+systemctl restart apache2
 
 echo "=== อนุญาต Firewall port ที่จำเป็น ==="
 ufw allow 1812/udp
