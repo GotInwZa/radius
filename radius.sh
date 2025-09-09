@@ -26,8 +26,8 @@ ln -sf /etc/freeradius/3.0/mods-available/sql /etc/freeradius/3.0/mods-enabled/s
 
 echo "=== แก้ไขไฟล์ mods-available/sql ==="
 # ใช้ sed แก้ค่า server, port, login, password, radius_db และเอา comment ออก
-cp sql /etc/freeradius/3.0/mods-available/sql
 chown freerad:freerad /etc/freeradius/3.0/mods-available/sql
+cp sql /etc/freeradius/3.0/mods-available/sql
 
 
 echo "=== เพิ่ม client ใน clients.conf โดยไม่เขียนทับเดิม ==="
@@ -42,9 +42,9 @@ client all {
 EOF
 
 #echo "=== Enable SQL Module ใน sites-enabled/default ==="
-cp default /etc/freeradius/3.0/sites-enabled/default
-chmod 640 /etc/freeradius/3.0/sites-enabled/default
-chown freerad:freerad /etc/freeradius/3.0/sites-enabled/default
+chown freerad:freerad /etc/freeradius/3.0/sites-available/default
+chmod 640 /etc/freeradius/3.0/sites-available/default
+cp default /etc/freeradius/3.0/sites-available/default
 
 echo "=== สร้าง User got และกำหนดสิทธิ Bandwidth ==="
 mysql -u radius_user -pradius_pass123 radius_db <<EOF
