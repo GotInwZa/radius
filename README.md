@@ -4,6 +4,8 @@
         SCRIPT CREATE BY GOT INWZA & PORNCHAI TOONKEAW
 
 ===============================================================
+
+
 root เท่านั้นที่ทำได้
 
 sudo -i
