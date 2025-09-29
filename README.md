@@ -1,7 +1,7 @@
 # radius
 ===============================================================
 
-        SCRIPT CREATE BY GOT INWZA & PORNCHAI TOONKEAW
+        SCRIPT CREATE BY GOTINWZA & PORNCHAI TOONKEAW
 
 ===============================================================
 
