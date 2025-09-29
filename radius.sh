@@ -77,7 +77,7 @@ echo "=== Radius On Webserver ===="
 cd /var/www/html
 git clone https://github.com/mangcom/radius.git
 sed -i 's|\$host = "db";|\$host = "localhost";|' /var/www/html/radius/config/config.php
-mysql -u raidus_user -pradius_pass123 radius_db <<EOF
+mysql -u radius_user -pradius_pass123 radius_db <<EOF
 CREATE TABLE admin_users ( id INT AUTO_INCREMENT PRIMARY KEY, username VARCHAR(50) UNIQUE NOT NULL,passwords VARCHAR(255) NOT NULL);
 INSERT INTO admin_users (username, passwords) VALUES ('admin', 'admin');
 EOF
