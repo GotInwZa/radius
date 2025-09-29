@@ -1,11 +1,13 @@
 # radius
-script requirement root
+===============================================================
 
+        SCRIPT CREATE BY GOT INWZA & PORNCHAI TOONKEAW
+
+===============================================================
+root เท่านั้นที่ทำได้
 
 sudo -i
 git clone https://github.com/GotInwZa/radius.git
-cd radius/
-apt install dos2unix -y
-dos2unix radius.sh
+cd radius
 chmod +x radius.sh
 ./radius.sh
